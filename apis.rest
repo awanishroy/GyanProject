@@ -1,0 +1,166 @@
+@url = http://127.0.0.1:8000/
+@id = 1
+
+### =================================== CLASS ===================================
+
+POST {{url}}/add-class
+Content-Type: application/json
+
+{
+    "PR_NAME":"LKG"
+}
+
+###
+
+POST {{url}}/update-class/{{id}}
+Content-Type: application/json
+
+{
+    "PR_NAME":"LKG"
+}
+
+
+### =================================== BOARD ===================================
+
+
+POST {{url}}/add-board
+Content-Type: application/json
+
+{
+    "PR_NAME":"UP"
+}
+
+###
+
+POST {{url}}/update-board/{{id}}
+Content-Type: application/json
+
+{
+    "PR_NAME":"CBSC"
+}
+
+### =================================== SERIES ===================================
+
+
+POST {{url}}/add-series
+Content-Type: application/json
+
+{
+    "PR_NAME": "test",
+    "PR_BOARD_id": 1,
+    "PR_CLASSES": [1,2]
+}
+
+###
+
+POST {{url}}/update-series/{{id}}
+Content-Type: application/json
+
+{
+    "PR_NAME": "test",
+    "PR_BOARD_id": 1,
+    "PR_CLASSES": [1,2]
+}
+
+
+
+### =================================== BOOK =====================================
+
+
+POST {{url}}/add-book
+Content-Type: application/json
+
+{
+    "PR_TITLE": "This is new Book",
+    "PR_SERIES_id": 7,
+    "PR_BOARD_id": 1,
+    "PR_CLASS_id": 1,
+    "PR_BOOK_TYPE_id":1,
+    "PR_SUB_TITLE": "Physics UP Board",
+    "PR_ISBN": 1254632561,
+    "PR_BOOK_NUMBER": 1,
+    "PR_CLASS_LEVEL": 1,
+    "PR_PRODUCT_DIVISION": null,
+    "PR_BROAD_SUBJECT": null,
+    "PR_DETAILED_SUBJECT": "Physics Up Board",
+    "PR_AUTHOR": null,
+    "PR_EDITION": null,
+    "PR_IMPRINT": null,
+    "PR_BOOK_CODE": null,
+    "PR_COPYRIGHT": null,
+    "PR_DATE_OF_RELEASE": null,
+    "PR_BINDING": null,
+    "PR_LANGUAGE": null,
+    "PR_PAGES": null,
+    "PR_TRIM_SIZE": null,
+    "PR_WEIGHT": null,
+    "PR_LIST_PRICE": null,
+    "PR_DISCOUNT": null,
+    "PR_PRODUCT_DESCRIPTION": null,
+    "PR_COMPANY": null,
+    "PR_BOOK_TYPE": null
+}
+
+###
+
+POST {{url}}/update-board/{{id}}
+Content-Type: application/json
+
+{
+    "PR_TITLE": "Physics UP Board",
+    "PR_SERIES_id": 6,
+    "PR_SUB_TITLE": "Physics UP Board",
+    "PR_ISBN": 1254632561,
+    "PR_BOOK_NUMBER": 1,
+    "PR_CLASS_LEVEL": 1,
+    "PR_PRODUCT_DIVISION": null,
+    "PR_BROAD_SUBJECT": null,
+    "PR_DETAILED_SUBJECT": "Physics Up Board",
+    "PR_AUTHOR": null,
+    "PR_EDITION": null,
+    "PR_IMPRINT": null,
+    "PR_BOOK_CODE": null,
+    "PR_COPYRIGHT": null,
+    "PR_DATE_OF_RELEASE": null,
+    "PR_BINDING": null,
+    "PR_LANGUAGE": null,
+    "PR_PAGES": null,
+    "PR_TRIM_SIZE": null,
+    "PR_WEIGHT": null,
+    "PR_LIST_PRICE": null,
+    "PR_DISCOUNT": null,
+    "PR_PRODUCT_DESCRIPTION": null,
+    "PR_COMPANY": null,
+    "PR_SERIES": 7,
+    "PR_BOARD": 1,
+    "PR_CLASS": 1,
+    "PR_BOOK_TYPE": null
+}
+
+###
+
+POST {{url}}/import-book-data
+Content-Type: application/json
+
+{
+    "PR_FILE": "file",
+}
+
+### =================================== BOOK TYPE ===================================
+
+
+POST {{url}}/add-book-type
+Content-Type: application/json
+
+{
+    "PR_NAME": "test"
+}
+
+###
+
+POST {{url}}/update-book-type/{{id}}
+Content-Type: application/json
+
+{
+    "PR_NAME": "test"
+}
