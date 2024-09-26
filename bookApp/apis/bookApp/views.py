@@ -54,7 +54,7 @@ class cbtBookViewSet(viewsets.ModelViewSet):
                 df = pd.read_excel(file)
                 
                 df.fillna({
-                    'Title': '','Sub Title': '','ISBN': '','Board Id':'','Class Id':'','Series Id':'','BookType Id': '' ,'Imprint':'','Author':'','Edition':'','Company': '','Book Code': '', 
+                    'Title': '','Sub Title': '','ISBN': '','Board Id':'','Class Id':'','Series Id':'','BookType Id': '','Subject Id':'' ,'Imprint':'','Author':'','Edition':'','Company': '','Book Code': '', 
                     'Copyright': '','Date Of Release': pd.NaT,'Binding': '','Language': '','Pages': 0,'TrimSize': '','Weight': 0.0,'List Price': 0.0,'Discount': 0.0,'BookNumber': 0, 
                     'ClassLevel': '','ProductDivision': '','BroadSubject': '','Detailed Subject': '','ProductDescription': ''}, inplace=True)
 
@@ -68,6 +68,7 @@ class cbtBookViewSet(viewsets.ModelViewSet):
                         PR_CLASS_id=row['Class Id'],
                         PR_SERIES_id=row['Series Id'],
                         PR_BOOK_TYPE_id=row['BookType Id'], 
+                        PR_SUBJECT_id=row['Subject Id'], 
                         PR_IMPRINT=row['Imprint'],
                         PR_AUTHOR=row['Author'],
                         PR_EDITION=row['Edition'],
@@ -155,89 +156,114 @@ class cbtBookViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
 
-    def fatchBookData(self ,request):
+    def fetchBookData(self, request):
         try:
             data = request.data
             msg, isValid = userPermission(data.get('PR_TOKEN'))
-            if isValid:
 
+            if isValid:
+                # Get all boards
                 board_obj = CbtBoard.objects.all()
-                serialized_data = CbtBoardSerializer(board_obj, many=True).data
-                
-                return CbtDataResponse(serialized_data, ApiStatus.Success ,CbtMessage.FatchSuccessMsg).cbtResponse()
+
+                result_data = []
+                for board in board_obj:
+                    series_data = []
+
+                    # Get all series related to this board
+                    series_obj = CbtSeries.objects.filter(PR_BOARD=board)
+
+                    for series in series_obj:
+                        classes_data = []
+
+                        # Get all classes related to this series
+                        classes_obj = CbtSeriesClass.objects.filter(PR_SERIES=series)
+
+                        for class_relation in classes_obj:
+                            cbt_class = class_relation.PR_CLASS
+                            subjects_data = []
+
+                            # Get all subjects related to this class
+                            subjects_obj = CbtClassSubject.objects.filter(PR_CLASS=cbt_class)
+
+                            for subject_relation in subjects_obj:
+                                subject = subject_relation.PR_SUBJECT
+
+                                # Get all books related to this subject and class
+                                books_data = CbtBookData.objects.filter(
+                                    PR_SUBJECT=subject,
+                                    PR_CLASS=cbt_class,
+                                    PR_BOARD=board,      # Assuming books may also relate to board
+                                    PR_SERIES=series     # Assuming books may also relate to series
+                                )
+
+                                # Create a dictionary to group books by type
+                                books_by_type = {}
+                                for book in books_data:
+                                    book_type_id = book.PR_BOOK_TYPE.PR_BOOK_TYPE_ID if book.PR_BOOK_TYPE else None
+                                    book_type_name = book.PR_BOOK_TYPE.PR_NAME if book.PR_BOOK_TYPE else "Unknown"
+
+                                    if book_type_id not in books_by_type:
+                                        books_by_type[book_type_id] = {
+                                            "PR_BOOK_TYPE_ID": book_type_id,
+                                            "PR_BOOK_TYPE_NAME": book_type_name,
+                                            "PR_BOOKS": []
+                                        }
+
+                                    # Append book data to the respective book type
+                                    books_by_type[book_type_id]["PR_BOOKS"].append({
+                                        "PR_BOOK_ID": book.PR_BOOK_ID,
+                                        "PR_TITLE": book.PR_TITLE,
+                                        "PR_SERIES": book.PR_SERIES_id,
+                                        "PR_BOARD": book.PR_BOARD_id,
+                                        "PR_CLASS": book.PR_CLASS_id,
+                                        "PR_SUBJECT": book.PR_SUBJECT_id,
+                                        "PR_AUTHOR": book.PR_AUTHOR,
+                                        "PR_ISBN": book.PR_ISBN,
+                                        # Add more fields as needed
+                                    })
+
+                                # Convert the dictionary to a list for subjects_data
+                                subject_books_data = [{"PR_BOOK_TYPE": book_type["PR_BOOK_TYPE_NAME"], "PR_BOOKS": book_type["PR_BOOKS"]}
+                                                    for book_type in books_by_type.values()]
+
+                                # Create subject data
+                                subjects_data.append({
+                                    "PR_SUBJECT_ID": subject.PR_SUBJECT_ID,
+                                    "PR_SUBJECT_NAME": subject.PR_NAME,
+                                    "PR_BOOK_TYPE": subject_books_data  # Add grouped books by type here
+                                })
+
+                            # Append the class data
+                            classes_data.append({
+                                "PR_CLASS_ID": cbt_class.PR_CLASS_ID,
+                                "PR_CLASS_NAME": cbt_class.PR_NAME,
+                                "PR_SUBJECTS": subjects_data,  # Add subjects with books here
+                            })
+
+                        # Append the series data
+                        series_data.append({
+                            "PR_SERIES_ID": series.PR_SERIES_ID,
+                            "PR_NAME": series.PR_NAME,
+                            "PR_CLASSES": classes_data  # Add all related classes here
+                        })
+
+                    # Append the board data
+                    board_data = {
+                        "PR_BOARD_ID": board.PR_BOARD_ID,
+                        "PR_NAME": board.PR_NAME,
+                        "PR_SERIES": series_data
+                    }
+
+                    result_data.append(board_data)
+
+                # Return the response with board, series, class, subject, and book data
+                return CbtDataResponse(result_data, ApiStatus.Success, CbtMessage.FatchSuccessMsg).cbtResponse()
+
             else:
                 return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg(msg)).cbtResponse()
+
         except Exception as ex:
-            return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
-        
-    # def fatchBookData(self ,request):
-    #     try:
-    #         data = request.data.get("CBT_API_REQUEST")
-    #         query = data.get("PR_FILTER")
-    #         msg, isValid = userPermission(data.get('PR_TOKEN'))
-    #         if isValid:
-    #             # Extract filter parameters
-    #             board_id = query.get("PR_BOARD_ID")
-    #             series_id = query.get("PR_SERIES_ID")
-    #             class_id = query.get("PR_CLASS_ID")
-    #             subject_id = query.get("PR_SUBJECT_ID")  # Assuming PR_SUBJECT_ID is PR_BOOK_TYPE
-    #             book_name = query.get("PR_BOOK")
-
-    #             # Initialize query filters
-    #             query_filters = {}
-    #             if board_id:
-    #                 query_filters["PR_BOARD__PR_BOARD_ID"] = board_id
-    #             if series_id:
-    #                 query_filters["PR_SERIES__PR_SERIES_ID"] = series_id
-    #             if class_id:
-    #                 query_filters["PR_CLASS__PR_CLASS_ID"] = class_id
-    #             if subject_id:
-    #                 query_filters["PR_BOOK_TYPE__PR_BOOK_TYPE_ID"] = subject_id
-    #             if book_name:
-    #                 query_filters["PR_TITLE__icontains"] = book_name
-
-    #             # Fetch the filtered book data
-    #             books = CbtBookData.objects.filter(**query_filters)
-
-    #             # Prepare the response data
-    #             book_data = []
-    #             for book in books:
-    #                 book_data.append({
-    #                 "PR_BOOK_ID": book.PR_BOOK_ID,
-    #                 "PR_TITLE": book.PR_TITLE,
-    #                 "PR_SUB_TITLE": book.PR_SUB_TITLE,
-    #                 "PR_SERIES": book.PR_SERIES.PR_NAME if book.PR_SERIES else None,
-    #                 "PR_BOARD": book.PR_BOARD.PR_NAME if book.PR_BOARD else None,
-    #                 "PR_CLASS": book.PR_CLASS.PR_NAME if book.PR_CLASS else None,
-    #                 "PR_BOOK_TYPE": book.PR_BOOK_TYPE.PR_NAME if book.PR_BOOK_TYPE else None,
-    #                 "PR_ISBN": book.PR_ISBN,
-    #                 "PR_IMPRINT": book.PR_IMPRINT,
-    #                 "PR_AUTHOR": book.PR_AUTHOR,
-    #                 "PR_EDITION": book.PR_EDITION,
-    #                 "PR_COMPANY": book.PR_COMPANY,
-    #                 "PR_BOOK_CODE": book.PR_BOOK_CODE,
-    #                 "PR_COPYRIGHT": book.PR_COPYRIGHT,
-    #                 "PR_DATE_OF_RELEASE": book.PR_DATE_OF_RELEASE,
-    #                 "PR_BINDING": book.PR_BINDING,
-    #                 "PR_LANGUAGE": book.PR_LANGUAGE,
-    #                 "PR_PAGES": book.PR_PAGES,
-    #                 "PR_TRIM_SIZE": book.PR_TRIM_SIZE,
-    #                 "PR_WEIGHT": str(book.PR_WEIGHT) if book.PR_WEIGHT else None,
-    #                 "PR_LIST_PRICE": str(book.PR_LIST_PRICE) if book.PR_LIST_PRICE else None,
-    #                 "PR_DISCOUNT": str(book.PR_DISCOUNT) if book.PR_DISCOUNT else None,
-    #                 "PR_BOOK_NUMBER": book.PR_BOOK_NUMBER,
-    #                 "PR_CLASS_LEVEL": book.PR_CLASS_LEVEL,
-    #                 "PR_PRODUCT_DIVISION": book.PR_PRODUCT_DIVISION,
-    #                 "PR_BROAD_SUBJECT": book.PR_BROAD_SUBJECT,
-    #                 "PR_DETAILED_SUBJECT": book.PR_DETAILED_SUBJECT,
-    #                 "PR_PRODUCT_DESCRIPTION": book.PR_PRODUCT_DESCRIPTION,
-    #             })
-
-    #             return CbtDataResponse(book_data, ApiStatus.Success ,CbtMessage.FatchSuccessMsg).cbtResponse()
-    #         else:
-    #             return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg(msg)).cbtResponse()
-    #     except Exception as ex:
-    #         return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
+            return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(str(ex))).cbtResponse()
 
 # ================================= CLASS VIEW SET ===============================
 

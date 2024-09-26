@@ -41,7 +41,7 @@ class CbtSeriesSerializer(serializers.ModelSerializer):
 # SERIALIZER FOR ADD OR UPDATE 
 
 class CbtBookTypeSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = CbtBookType
         fields = '__all__'

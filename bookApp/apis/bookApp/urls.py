@@ -12,7 +12,7 @@ urlpatterns = [
     
     path('import-book-data', views.cbtBookViewSet.as_view({'post': 'importBookData'})),
 
-    path('fatch-book-data',views.cbtBookViewSet.as_view({'post':'fatchBookData'})),
+    path('fetch-book-data',views.cbtBookViewSet.as_view({'post':'fetchBookData'})),
 
     # ================================= CLAS URL'S ==================================
 

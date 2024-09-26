@@ -1,6 +1,6 @@
 from django.db import models
 
-# Board Model
+# Subject Model
 class CbtSubject(models.Model):
     PR_SUBJECT_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
@@ -14,14 +14,14 @@ class CbtSubject(models.Model):
 class CbtClasses(models.Model):
     PR_CLASS_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
-    PR_SUBJECT = models.ManyToManyField(CbtSubject, through='CbtClassSubject', related_name='series')
+    PR_SUBJECT = models.ManyToManyField(CbtSubject, through='CbtClassSubject', related_name='pr_classes')
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'cbt_classes'
 
-# Pivot Table (CbtSeriesClass)
+# Pivot Table (CbtClassSubject)
 class CbtClassSubject(models.Model):
     PR_CLASS_SUBJECT_ID = models.AutoField(primary_key=True)
     PR_CLASS = models.ForeignKey(CbtClasses, on_delete=models.CASCADE)
@@ -46,9 +46,9 @@ class CbtSeries(models.Model):
     PR_SERIES_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=255)
     # Relationships
-    PR_BOARD = models.ForeignKey(CbtBoard, on_delete=models.SET_NULL, null=True, blank=True)
+    PR_BOARD = models.ForeignKey(CbtBoard, on_delete=models.SET_NULL, null=True, blank=True ,related_name='pr_series')
     # Many-to-Many Relationship with CbtClasses
-    PR_CLASSES = models.ManyToManyField(CbtClasses, through='CbtSeriesClass', related_name='series')
+    PR_CLASSES = models.ManyToManyField(CbtClasses, through='CbtSeriesClass', related_name='pr_series_classes')
     # Timestamps
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
