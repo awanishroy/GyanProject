@@ -89,4 +89,19 @@ class ItemData(Generic[T]):
             }            
             return data
         
+        if self.apiType == 'PR_SUBJECT_ID':
+            data = {
+                'ID': self.value['PR_SUBJECT_ID'],
+                'TITLE': self.value['PR_NAME'],
+                'IMAGE': '',
+                'SUBTITLE': '',
+                'SELECTED': False,
+                'IS_EXPANDED': False,
+                'ORIGINAL_DATA': self.value,
+                'ROW_DATA': CbtCommonDataRes(value=self.value).subjectDataResponse(),
+                'EXPANDABLE_DATA': [],
+                'BG_COLOR': '',
+            }            
+            return data
+        
        

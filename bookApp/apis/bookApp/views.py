@@ -293,7 +293,7 @@ class cbtClassViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()   
     
-    # ============================ CLASS LIST DATA ===============================
+    # ============================ CLASS LIST DATA ================================
     def classList(self, request):
         try:
             data = request.data
@@ -341,6 +341,85 @@ class cbtClassViewSet(viewsets.ModelViewSet):
 
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
+
+
+# ================================= SUBJECT VIEW SET ===============================
+
+class cbtSubjectViewSet(viewsets.ModelViewSet):
+
+    # ========================== ADD OR UPDATE SUBJECT DATA ========================
+    def addUpdateSubjectData(self, request , PR_SUBJECT_ID = None):
+        try:
+            data = request.data
+            msg, isValid = userPermission(data.get('PR_TOKEN'))
+            if isValid:
+                if PR_SUBJECT_ID != None:
+                    try:
+                        instance = CbtSubject.objects.get(PR_SUBJECT_ID=PR_SUBJECT_ID)
+                        serializer = CbtSubjectSerializer(instance, data=data, partial=True)
+                    except ObjectDoesNotExist:
+                        return CbtDataResponse([], ApiStatus.Failure, CbtMessage.DataNotFound).cbtResponse()
+                else:
+                    serializer = CbtSubjectSerializer(data=data)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    return CbtDataResponse(serializer.data, ApiStatus.Success ,CbtMessage.SubmitSuccessMsg).cbtResponse()
+                return CbtDataResponse(serializer.errors, ApiStatus.Failure, CbtMessage.DataNotValid).cbtResponse()
+            
+            return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg(msg)).cbtResponse()
+        except Exception as ex:
+            return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()   
+    
+    # ============================ SUBJECT LIST DATA ===============================
+    def subjectList(self, request):
+        try:
+            data = request.data
+            user_data, isValid = userPermission(data.get('PR_TOKEN'))
+            if isValid:
+                if data.get('PR_SUBJECT_ID') is not None:
+                    data_obj = CbtSubject.objects.get(PR_SUBJECT_ID=data.get('PR_SUBJECT_ID'))
+                    serializer = CbtSubjectSerializer(data_obj)
+                else:
+                    data_objs = CbtSubject.objects.all()
+                    serializer = CbtSubjectSerializer(data_objs, many=True)
+
+                return CbtDataResponse(serializer.data, ApiStatus.Success).cbtResponse()
+
+            return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg(user_data)).cbtResponse()
+
+        except Exception as ex:
+            return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
+
+    # ============================= SUBJECT DATA LIST DATA ===========================
+    def subjectDataList(self, request):
+        try:
+            request_data = request.data
+            data = request_data.get('CBT_REQUEST_DATA')
+            msg, isValid = userPermission(data.get('PR_TOKEN'))
+            if isValid:
+                total_data = 0
+                pgn = cbtPagination(int(data.get('PR_PAGE_NO')), int(data.get('PR_DATA_LIMIT')))
+                if pgn is None:
+                    return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg("Page number and data limit must be required !!")).cbtResponse()
+
+                if data.get('PR_QUERY'):
+                    data_objs = CbtFliterData(data.get('PR_QUERY')).classFilter()  # Assume there's a filter for classes
+                    total_data = data_objs.count()
+                else:
+                    data_objs = CbtSubject.objects.all().order_by('-PR_SUBJECT_ID')[pgn['start']:pgn['end']]
+                    total_data = CbtSubject.objects.all().count()
+
+                serializer = CbtSubjectSerializer(data_objs, many=True)
+                page_count = cbtPageCount(data_limit=pgn['data_limit'], total_data=total_data)
+
+                return CbtDataListResponse(serializer.data, ApiStatus.Success, pageCount=page_count, apiType='CBT_SUBJECT_DATA').cbtResponse()
+
+            return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg(msg)).cbtResponse()
+
+        except Exception as ex:
+            return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
+
 
 # ================================= BOARD VIEW SET ================================
 

@@ -37,6 +37,11 @@ class CbtSeriesSerializer(serializers.ModelSerializer):
                 f"The following classes id's do not exist: {non_existing_classes}"
             )
         return value
+    
+class CbtSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CbtSubject
+        fields = '__all__'
 
 # SERIALIZER FOR ADD OR UPDATE 
 

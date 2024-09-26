@@ -14,12 +14,19 @@ urlpatterns = [
 
     path('fetch-book-data',views.cbtBookViewSet.as_view({'post':'fetchBookData'})),
 
-    # ================================= CLAS URL'S ==================================
+    # ================================= CLASS URL'S ==================================
 
     path('add-class', views.cbtClassViewSet.as_view({'post': 'addUpdateClassData'})),
     path('update-class/<int:PR_CLASS_ID>', views.cbtClassViewSet.as_view({'post': 'addUpdateClassData'})),
     path('class-list', views.cbtClassViewSet.as_view({'post': 'classList'})),
     path('class-data-list', views.cbtClassViewSet.as_view({'post': 'classDataList'})),
+
+    # ================================= SUBJECT URL'S ==================================
+
+    path('add-subject', views.cbtSubjectViewSet.as_view({'post': 'addUpdateSubjectData'})),
+    path('update-subject/<int:PR_SUBJECT_ID>', views.cbtSubjectViewSet.as_view({'post': 'addUpdateSubjectData'})),
+    path('subject-list', views.cbtSubjectViewSet.as_view({'post': 'subjectList'})),
+    path('subject-data-list', views.cbtSubjectViewSet.as_view({'post': 'subjectDataList'})),
 
 
     # ================================= BOARD URL'S =================================

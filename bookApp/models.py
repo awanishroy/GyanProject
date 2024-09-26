@@ -4,6 +4,7 @@ from django.db import models
 class CbtSubject(models.Model):
     PR_SUBJECT_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
@@ -15,6 +16,7 @@ class CbtClasses(models.Model):
     PR_CLASS_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
     PR_SUBJECT = models.ManyToManyField(CbtSubject, through='CbtClassSubject', related_name='pr_classes')
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
@@ -35,6 +37,7 @@ class CbtBoard(models.Model):
     PR_BOARD_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
     # Timestamps
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
@@ -50,6 +53,7 @@ class CbtSeries(models.Model):
     # Many-to-Many Relationship with CbtClasses
     PR_CLASSES = models.ManyToManyField(CbtClasses, through='CbtSeriesClass', related_name='pr_series_classes')
     # Timestamps
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
@@ -71,6 +75,7 @@ class CbtBookType(models.Model):
     PR_BOOK_TYPE_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=255)
     # Timestamps
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
@@ -112,6 +117,7 @@ class CbtBookData(models.Model):
     PR_DETAILED_SUBJECT = models.CharField(max_length=255, null=True, blank=True)
     PR_PRODUCT_DESCRIPTION = models.TextField(null=True, blank=True)
 
+    PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 

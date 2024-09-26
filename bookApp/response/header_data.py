@@ -28,5 +28,8 @@ class IListH:
         
         elif self.apiType == 'CBT_BOOK_TYPE_DATA':
             original_list.append(CbtCommonDataRes(self.value[0], is_header=True).bookTypeDataResponse())
+
+        elif self.apiType == 'PR_SUBJECT_ID':
+            original_list.append(CbtCommonDataRes(self.value[0], is_header=True).subjectDataResponse())
         
         return original_list

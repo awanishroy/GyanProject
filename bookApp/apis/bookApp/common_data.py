@@ -54,6 +54,17 @@ class CbtCommonDataRes:
         
         return data
     
+    def subjectDataResponse(self)-> T:
+        data = []
+        data.append(CbtHeader(title='Id', value=self.value['PR_SUBJECT_ID'] if self.is_header != True else '').hRes())
+        data.append(CbtHeader(title='Name', value=self.value['PR_NAME'] if self.is_header != True else '').hRes())
+        # data.append(CbtHeader(title='Status', value=statusTxt(self.value['PR_STATUS']) if self.is_header != True else '', color=statusCol(self.value['PR_STATUS'])).hRes())
+        data.append(CbtHeader(title='Created At', value=dateTime(self.value['PR_CREATED_AT']) if self.is_header != True else '').hRes())
+        data.append(CbtHeader(title='  Edit  ', value='BUTTON' if self.is_header != True else '', color='#335EFF', is_click=True, click_url='', request_value=str(self.value['PR_SUBJECT_ID']), btn_click_type=BtnClickType.web, btn_type=BtnType.edit, flex=0).hRes())
+        data.append(CbtHeader(title='  Delete  ', value='BUTTON' if self.is_header != True else '', color='#335EFF', is_click=True, click_url='', request_key='PR_SUBJECT_ID', request_value=str(self.value['PR_SUBJECT_ID']), btn_click_type=BtnClickType.native, btn_type=BtnType.delete, flex=0).hRes())
+        
+        return data
+    
     
     def bookTypeDataResponse(self)-> T:
         data = []
