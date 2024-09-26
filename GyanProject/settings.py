@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'GyanProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'testing_db',
+        'NAME': 'testing_db_1',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',

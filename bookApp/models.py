@@ -1,15 +1,34 @@
 from django.db import models
 
+# Board Model
+class CbtSubject(models.Model):
+    PR_SUBJECT_ID = models.AutoField(primary_key=True)
+    PR_NAME = models.CharField(max_length=100)
+    PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
+    PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'cbt_subject'
+
 # Class Level Model
 class CbtClasses(models.Model):
     PR_CLASS_ID = models.AutoField(primary_key=True)
     PR_NAME = models.CharField(max_length=100)
-    # Timestamps
+    PR_SUBJECT = models.ManyToManyField(CbtSubject, through='CbtClassSubject', related_name='series')
     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'cbt_classes'
+
+# Pivot Table (CbtSeriesClass)
+class CbtClassSubject(models.Model):
+    PR_CLASS_SUBJECT_ID = models.AutoField(primary_key=True)
+    PR_CLASS = models.ForeignKey(CbtClasses, on_delete=models.CASCADE)
+    PR_SUBJECT = models.ForeignKey(CbtSubject, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'cbt_class_subject'
 
 # Board Model
 class CbtBoard(models.Model):
@@ -69,6 +88,7 @@ class CbtBookData(models.Model):
     PR_BOARD = models.ForeignKey(CbtBoard, on_delete=models.SET_NULL, null=True, blank=True)
     PR_CLASS = models.ForeignKey(CbtClasses, on_delete=models.SET_NULL, null=True, blank=True)
     PR_BOOK_TYPE = models.ForeignKey(CbtBookType, on_delete=models.SET_NULL, null=True, blank=True)
+    PR_SUBJECT = models.ForeignKey(CbtSubject, on_delete=models.SET_NULL, null=True, blank=True)
 
     PR_ISBN = models.CharField(max_length=255, null=True, blank=True)
     PR_IMPRINT = models.CharField(max_length=100, null=True, blank=True)

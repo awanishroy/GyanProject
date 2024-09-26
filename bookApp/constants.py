@@ -20,6 +20,7 @@ class CbtMessage:
     PermissionMsg = 'You do not have permission!!'
     SubmitSuccessMsg = 'Data has been successfully submited!!'
     UpdateSuccessMsg = 'Data has been successfully updated!!'
+    FatchSuccessMsg = 'Data has been fatched successfully!!'
     DeleteSuccessMsg = 'Data has been successfully deleted!!'
     DataNotValid = "Data isn't valid!!"
     MessageFailed = "Message isn't send!!"

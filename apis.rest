@@ -53,13 +53,13 @@ Content-Type: application/json
 
 ###
 
-POST {{url}}/update-series/{{id}}
+POST {{url}}/update-series/9
 Content-Type: application/json
 
 {
-    "PR_NAME": "Winter",
-    "PR_BOARD_id": 1,
-    "PR_CLASSES": [1,2]
+    "PR_NAME": "12th Series",
+    "PR_BOARD_id": 2,
+    "PR_CLASSES": [1]
 }
 
 
@@ -73,9 +73,9 @@ Content-Type: application/json
 {
     "PR_TITLE": "This is new Book",
     "PR_SERIES_id": 7,
-    "PR_BOARD_id": 1,
-    "PR_CLASS_id": 1,
-    "PR_BOOK_TYPE_id":1,
+    "PR_BOARD_id": 2,
+    "PR_CLASS_id": 2,
+    "PR_BOOK_TYPE_id":2,
     "PR_SUB_TITLE": "Physics UP Board",
     "PR_ISBN": 1254632561,
     "PR_BOOK_NUMBER": 1,
@@ -144,6 +144,25 @@ Content-Type: application/json
 
 {
     "PR_FILE": "file",
+}
+
+###
+
+POST {{url}}/fatch-book-data
+Content-Type: application/json
+
+{
+    "CBT_API_REQUEST":{
+        "PR_TOKEN":"",
+        "PR_FILTER":{
+            "PR_BOARD_ID":"",
+            "PR_SERIES_ID":"",
+            "PR_CLASS_ID":"",
+            "PR_SUBJECT_ID":"",
+            "PR_TYPE_ID":"",
+            "PR_BOOK":"XI"
+        }
+    }
 }
 
 ### =================================== BOOK TYPE ===================================
