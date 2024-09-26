@@ -39,7 +39,7 @@ urlpatterns = [
     # ================================= BOOK TYPE URL'S ===============================
 
     path('add-book-type', views.cbtBookTypeViewSet.as_view({'post': 'addUpdateBookTypeData'})),
-    path('update-book-type', views.cbtBookTypeViewSet.as_view({'post': 'addUpdateBookTypeData'})),
+    path('update-book-type/<int:PR_BOOK_TYPE_ID>', views.cbtBookTypeViewSet.as_view({'post': 'addUpdateBookTypeData'})),
     path('book-type-list', views.cbtBookTypeViewSet.as_view({'post': 'bookTypeList'})),
     path('book-type-data-list', views.cbtBookTypeViewSet.as_view({'post': 'bookTypeDataList'})),
   

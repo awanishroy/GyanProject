@@ -7,7 +7,7 @@ POST {{url}}/add-class
 Content-Type: application/json
 
 {
-    "PR_NAME":"LKG"
+    "PR_NAME":"UKG"
 }
 
 ###
@@ -16,7 +16,7 @@ POST {{url}}/update-class/{{id}}
 Content-Type: application/json
 
 {
-    "PR_NAME":"LKG"
+    "PR_NAME":"1st"
 }
 
 
@@ -27,7 +27,7 @@ POST {{url}}/add-board
 Content-Type: application/json
 
 {
-    "PR_NAME":"UP"
+    "PR_NAME":"ICSC"
 }
 
 ###
@@ -46,9 +46,9 @@ POST {{url}}/add-series
 Content-Type: application/json
 
 {
-    "PR_NAME": "test",
+    "PR_NAME": "Summer",
     "PR_BOARD_id": 1,
-    "PR_CLASSES": [1,2]
+    "PR_CLASSES": [1,2,3]
 }
 
 ###
@@ -57,7 +57,7 @@ POST {{url}}/update-series/{{id}}
 Content-Type: application/json
 
 {
-    "PR_NAME": "test",
+    "PR_NAME": "Winter",
     "PR_BOARD_id": 1,
     "PR_CLASSES": [1,2]
 }
@@ -103,7 +103,7 @@ Content-Type: application/json
 
 ###
 
-POST {{url}}/update-board/{{id}}
+POST {{url}}/update-book/{{id}}
 Content-Type: application/json
 
 {
@@ -153,12 +153,12 @@ POST {{url}}/add-book-type
 Content-Type: application/json
 
 {
-    "PR_NAME": "test"
+    "PR_NAME": "Others"
 }
 
 ###
 
-POST {{url}}/update-book-type/{{id}}
+POST {{url}}/update-book-type/1
 Content-Type: application/json
 
 {

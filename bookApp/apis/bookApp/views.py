@@ -394,7 +394,7 @@ class cbtSeriesViewSet(viewsets.ModelViewSet):
 class cbtBookTypeViewSet(viewsets.ModelViewSet):
 
     # ========================= ADD OR UPDATE BOOK TYPE DATA ========================
-    def addUpdateBookTypeData(self,request,PR_BOOK_TYPE_ID):
+    def addUpdateBookTypeData(self,request,PR_BOOK_TYPE_ID = None):
         try:
             data = request.data
             msg, isValid = userPermission(data.get('PR_TOKEN'))
