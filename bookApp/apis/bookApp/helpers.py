@@ -28,20 +28,27 @@ class CbtFliterData:
         self.query_data = query_data
 
  
-    # def designationFilter(self):
-    #     data_objs = CbtDesignation.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_DESIGNATION_ID')
-    #     return data_objs
+    def bookTypeFilter(self):
+        data_objs = CbtBookType.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_BOOK_TYPE_ID')
+        return data_objs
     
-    # def departmentFilter(self):
-    #     data_objs = CbtDepartment.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_DEPARTMENT_ID')
-    #     return data_objs
+    def seriesFilter(self):
+        data_objs = CbtSeries.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_SERIES_ID')
+        return data_objs
     
-    # def menuFilter(self):
-    #     data_objs = CbtMenu.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_MENU_ID')
-    #     return data_objs
+    def boardFilter(self):
+        data_objs = CbtBoard.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_BOARD_ID')
+        return data_objs
     
-    # def submenuFilter(self):
-    #     data_objs = CbtSubmenu.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_SUBMENU_ID')
-    #     return data_objs
+    def subjectFilter(self):
+        data_objs = CbtBoard.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_SUBJECT_ID')
+        return data_objs
     
-
+    def classFilter(self):
+        data_objs = CbtClasses.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_CLASS_ID')
+        return data_objs
+    
+    def bookFilter(self):
+        data_objs = CbtBookData.objects.filter(Q(PR_NAME__istartswith=self.query_data)).order_by('-PR_BOOK_ID')
+        return data_objs
+    

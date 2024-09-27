@@ -9,7 +9,6 @@ from rest_framework import viewsets
 from django.http import HttpResponse
 
 
-
 def index(self):
     return HttpResponse("Hello, you are lost.")
 
@@ -138,7 +137,7 @@ class cbtBookViewSet(viewsets.ModelViewSet):
                     return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg("Page number and data limit must be required !!")).cbtResponse()
                 
                 if data.get('PR_QUERY') != '':
-                    data_objs = CbtFliterData(data.get('PR_QUERY')).departmentFilter()
+                    data_objs = CbtFliterData(data.get('PR_QUERY')).bookFilter()
                     total_data = data_objs.count()
                 
                 else: 
@@ -265,11 +264,11 @@ class cbtBookViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(str(ex))).cbtResponse()
 
-# ================================= CLASS VIEW SET ===============================
+# ================================= CLASS VIEW SET =================================
 
 class cbtClassViewSet(viewsets.ModelViewSet):
 
-    # ========================== ADD OR UPDATE CLASS DATA =========================
+    # ========================== ADD OR UPDATE CLASS DATA ==========================
     def addUpdateClassData(self, request , PR_CLASS_ID = None):
         try:
             data = request.data
@@ -293,7 +292,7 @@ class cbtClassViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()   
     
-    # ============================ CLASS LIST DATA ================================
+    # ============================ CLASS LIST DATA ==================================
     def classList(self, request):
         try:
             data = request.data
@@ -313,7 +312,7 @@ class cbtClassViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
 
-    # ============================= CLASS DATA LIST DATA ===========================
+    # ============================= CLASS DATA LIST DATA ============================
     def classDataList(self, request):
         try:
             request_data = request.data
@@ -343,11 +342,11 @@ class cbtClassViewSet(viewsets.ModelViewSet):
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbtResponse()
 
 
-# ================================= SUBJECT VIEW SET ===============================
+# ================================= SUBJECT VIEW SET ================================
 
 class cbtSubjectViewSet(viewsets.ModelViewSet):
 
-    # ========================== ADD OR UPDATE SUBJECT DATA ========================
+    # ========================== ADD OR UPDATE SUBJECT DATA =========================
     def addUpdateSubjectData(self, request , PR_SUBJECT_ID = None):
         try:
             data = request.data
@@ -404,7 +403,7 @@ class cbtSubjectViewSet(viewsets.ModelViewSet):
                     return CbtDataResponse([], ApiStatus.Failure, CbtMessage.cbtMsg("Page number and data limit must be required !!")).cbtResponse()
 
                 if data.get('PR_QUERY'):
-                    data_objs = CbtFliterData(data.get('PR_QUERY')).classFilter()  # Assume there's a filter for classes
+                    data_objs = CbtFliterData(data.get('PR_QUERY')).subjectFilter()
                     total_data = data_objs.count()
                 else:
                     data_objs = CbtSubject.objects.all().order_by('-PR_SUBJECT_ID')[pgn['start']:pgn['end']]
