@@ -30,11 +30,44 @@ class CbtClasses(models.Model):
 # Pivot Table (CbtClassSubject)
 class CbtClassSubject(models.Model):
     PR_CLASS_SUBJECT_ID = models.AutoField(primary_key=True)
+    PR_SUBJECT = models.ForeignKey(CbtSubject, on_delete=models.CASCADE, related_name='PR_SUBJECT', null=True, blank=True)
     PR_CLASS = models.ForeignKey(CbtClasses, on_delete=models.CASCADE)
-    PR_SUBJECT = models.ForeignKey(CbtSubject, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'cbt_class_subject'
+
+# class CbtDepartment(models.Model):
+#     PR_DEPARTMENT_ID = models.BigAutoField(primary_key=True)
+#     PR_NAME = models.CharField(max_length=255, unique=True)
+#     PR_ICON = models.CharField(max_length=255, null=True, blank=True, default='')
+#     PR_DESCRIPTION = models.TextField(max_length=255, null=True, blank=True, default='')
+#     PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
+#     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
+#     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
+    
+#     class Meta:
+#         db_table = 'cbt_department'        
+
+# class CbtDesignation(models.Model):
+#     PR_DESIGNATION_ID = models.BigAutoField(primary_key=True)
+#     PR_NAME = models.CharField(max_length=255, unique=True)
+#     PR_ICON = models.CharField(max_length=255, null=True, blank=True, default='')
+#     PR_DESCRIPTION = models.TextField(max_length=255, null=True, blank=True, default='')
+#     PR_STATUS = models.IntegerField(null=True, blank=True, default=0)
+#     PR_CREATED_AT = models.DateTimeField(auto_now_add=True)
+#     PR_MODIFIED_AT = models.DateTimeField(auto_now=True)
+    
+#     class Meta:
+#         db_table = 'cbt_designation'
+
+# class CbtDepartmentDesignation(models.Model):
+#     PR_ID = models.BigAutoField(primary_key=True)
+#     PR_DEPARTMENT = models.ForeignKey(CbtDepartment, on_delete=models.CASCADE, related_name='PR_DESIGNATIONS', null=True, blank=True)
+#     PR_DESIGNATION = models.ForeignKey(CbtDesignation, on_delete=models.CASCADE)
+
+#     class Meta:
+#         db_table = 'cbt_department_designation'
+
 
 # Board Model
 class CbtBoard(models.Model):

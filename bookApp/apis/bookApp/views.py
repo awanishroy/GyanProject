@@ -647,3 +647,5 @@ class cbtBookTypeViewSet(viewsets.ModelViewSet):
 
         except Exception as ex:
             return CbtDataResponse([], ApiStatus.Exception, CbtMessage.CbtExceptionMsg(ex)).cbResponse()
+
+            

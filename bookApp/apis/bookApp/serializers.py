@@ -3,17 +3,44 @@ from rest_framework.validators import *
 from drf_writable_nested import WritableNestedModelSerializer
 from bookApp.models import *
 
-class CbtClassesSerializer(serializers.ModelSerializer):
-    
-    PR_NAME = serializers.CharField(required=True)
-    PR_SUBJECT = serializers.ListField(
-        child=serializers.IntegerField(), write_only=True, required=True
-    )
+# class CbtSubjectSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CbtSubject
+#         fields = '__all__'
 
+# class CbtClassesSerializer(serializers.ModelSerializer):
+    
+#     PR_NAME = serializers.CharField(required=True)
+#     PR_SUBJECT = serializers.ListField(
+#         child=serializers.IntegerField(), write_only=True, required=True
+#     )
+#     PR_SUBJECT = CbtSubjectSerializer(many=True)
+
+#     class Meta:
+#         model = CbtClasses
+#         fields = ['PR_NAME', 'PR_IMAGE', 'PR_DESCRIPTION', 'PR_STATUS', 'PR_SUBJECT' ,'PR_CREATED_AT', 'PR_MODIFIED_AT']
+#         read_only_fields = ['PR_CREATED_AT', 'PR_MODIFIED_AT']
+
+class CbtClassSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CbtClassSubject
+        fields = ('__all__')
+
+class CbtClassSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
+    PR_SUBJECT = CbtClassSubjectSerializer(many=True)
     class Meta:
         model = CbtClasses
-        fields = ['PR_NAME', 'PR_IMAGE', 'PR_DESCRIPTION', 'PR_STATUS', 'PR_SUBJECT' ,'PR_CREATED_AT', 'PR_MODIFIED_AT']
-        read_only_fields = ['PR_CREATED_AT', 'PR_MODIFIED_AT']
+        fields = ['PR_NAME', 'PR_IMAGE', 'PR_DESCRIPTION', 'PR_STATUS', 'PR_SUBJECT', 'PR_CREATED_AT', 'PR_MODIFIED_AT', 'PR_SUBJECT']
+
+class CbtClassDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CbtClasses
+        fields = ('__all__')
+
+class CbtSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CbtSubject
+        fields = ('__all__')
 
 # SERIALIZER FOR ADD OR UPDATE 
 
@@ -45,11 +72,6 @@ class CbtSeriesSerializer(serializers.ModelSerializer):
             )
         return value
     
-class CbtSubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CbtSubject
-        fields = '__all__'
-
 # SERIALIZER FOR ADD OR UPDATE 
 
 class CbtBookTypeSerializer(serializers.ModelSerializer):
